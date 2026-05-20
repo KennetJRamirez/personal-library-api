@@ -1,0 +1,146 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Book {
+  id              String   @id @default(uuid())
+  title           String
+  subtitle        String?
+  isbn            String   @unique
+  description     String?
+  publicationDate DateTime
+  language        String
+  pages           Int
+  coverImageUrl   String?
+  edition         String?
+  format          String
+  price           Float?
+  averageRating   Float?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Author {
+  id          String   @id @default(uuid())
+  firstName   String
+  lastName    String
+  biography   String?
+  nationality String?
+  birthDate   DateTime?
+  deathDate   DateTime?
+  website     String?
+  photo       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Genre {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Publisher {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  country     String?
+  city        String?
+  website     String?
+  email       String?
+  phone       String?
+  logo        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model User {
+  id           String   @id @default(uuid())
+  username     String   @unique
+  email        String   @unique
+  password     String
+  firstName    String
+  lastName     String
+  profileImage String?
+  bio          String?
+  roleId       String
+  isActive     Boolean  @default(true)
+  lastLogin    DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  title      String?
+  comment    String?
+  rating     Float
+  isSpoiler  Boolean  @default(false)
+  likes      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model ReadingSession {
+  id                 String   @id @default(uuid())
+  startDate          DateTime
+  endDate            DateTime?
+  currentPage        Int
+  pagesRead          Int
+  progressPercentage Float?
+  notes              String?
+  durationMinutes    Int?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model Collection {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  visibility  String
+  coverImage  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Shelf {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  color       String?
+  icon        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Tag {
+  id          String   @id @default(uuid())
+  name        String
+  color       String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
