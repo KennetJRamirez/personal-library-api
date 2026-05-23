@@ -13,134 +13,200 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Book {
-  id              String   @id @default(uuid())
-  title           String
-  subtitle        String?
-  isbn            String   @unique
-  description     String?
-  publicationDate DateTime
-  language        String
-  pages           Int
-  coverImageUrl   String?
-  edition         String?
-  format          String
-  price           Float?
-  averageRating   Float?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+id              String   @id @default(uuid())
+title           String
+subtitle        String?
+isbn            String   @unique
+description     String?
+publicationDate DateTime
+language        String
+pages           Int
+coverImageUrl   String?
+edition         String?
+format          String
+price           Float?
+averageRating   Float?
+
+publisherId String?
+publisher   Publisher? @relation(fields: [publisherId], references: [id])
+
+authors Author[]
+genres  Genre[]
+tags    Tag[]
+
+reviews         Review[]
+readingSessions ReadingSession[]
+collections     Collection[]
+shelves         Shelf[]
+
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
 }
 
 model Author {
-  id          String   @id @default(uuid())
-  firstName   String
-  lastName    String
-  biography   String?
-  nationality String?
-  birthDate   DateTime?
-  deathDate   DateTime?
-  website     String?
-  photo       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+id          String   @id @default(uuid())
+firstName   String
+lastName    String
+biography   String?
+nationality String?
+birthDate   DateTime?
+deathDate   DateTime?
+website     String?
+photo       String?
+
+books Book[]
+
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
 }
 
 model Genre {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+id          String   @id @default(uuid())
+name        String
+description String?
+
+books Book[]
+
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
 }
 
 model Publisher {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  country     String?
-  city        String?
-  website     String?
-  email       String?
-  phone       String?
-  logo        String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+id          String   @id @default(uuid())
+name        String
+description String?
+country     String?
+city        String?
+website     String?
+email       String?
+phone       String?
+logo        String?
+
+books Book[]
+
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
 }
 
 model User {
-  id           String   @id @default(uuid())
-  username     String   @unique
-  email        String   @unique
-  password     String
-  firstName    String
-  lastName     String
-  profileImage String?
-  bio          String?
-  roleId       String
-  isActive     Boolean  @default(true)
-  lastLogin    DateTime?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+id           String   @id @default(uuid())
+username     String   @unique
+email        String   @unique
+password     String
+firstName    String
+lastName     String
+profileImage String?
+bio          String?
+
+roleId String
+role   Role @relation(fields: [roleId], references: [id])
+
+reviews         Review[]
+readingSessions ReadingSession[]
+collections     Collection[]
+shelves         Shelf[]
+tags            Tag[]
+
+isActive  Boolean  @default(true)
+lastLogin DateTime?
+
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
 }
 
 model Role {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+id          String   @id @default(uuid())
+name        String   @unique
+description String?
+
+users User[]
+
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
 }
 
 model Review {
-  id         String   @id @default(uuid())
-  title      String?
-  comment    String?
-  rating     Float
-  isSpoiler  Boolean  @default(false)
-  likes      Int      @default(0)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+id        String  @id @default(uuid())
+title     String?
+comment   String?
+rating    Float
+isSpoiler Boolean @default(false)
+likes     Int     @default(0)
+
+userId String
+user   User @relation(fields: [userId], references: [id])
+
+bookId String
+book   Book @relation(fields: [bookId], references: [id])
+
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
 }
 
 model ReadingSession {
-  id                 String   @id @default(uuid())
-  startDate          DateTime
-  endDate            DateTime?
-  currentPage        Int
-  pagesRead          Int
-  progressPercentage Float?
-  notes              String?
-  durationMinutes    Int?
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+id                 String   @id @default(uuid())
+startDate          DateTime
+endDate            DateTime?
+currentPage        Int
+pagesRead          Int
+progressPercentage Float?
+notes              String?
+durationMinutes    Int?
+
+userId String
+user   User @relation(fields: [userId], references: [id])
+
+bookId String
+book   Book @relation(fields: [bookId], references: [id])
+
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
 }
 
 model Collection {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  visibility  String
-  coverImage  String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+id          String @id @default(uuid())
+name        String
+description String?
+visibility  String
+coverImage  String?
+
+userId String
+user   User @relation(fields: [userId], references: [id])
+
+books Book[]
+
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
 }
 
 model Shelf {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  color       String?
-  icon        String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+id          String @id @default(uuid())
+name        String
+description String?
+color       String?
+icon        String?
+
+userId String
+user   User @relation(fields: [userId], references: [id])
+
+books Book[]
+
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
 }
 
 model Tag {
-  id          String   @id @default(uuid())
-  name        String
-  color       String?
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+id          String @id @default(uuid())
+name        String
+color       String?
+description String?
+
+userId String
+user   User @relation(fields: [userId], references: [id])
+
+books Book[]
+
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
 }

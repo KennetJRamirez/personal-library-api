@@ -1,8 +1,10 @@
 import app from "./app.js";
 import { connectDB } from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes);
 
 const PORT = process.env.PORT;
 

@@ -10,14 +10,19 @@ export const createUserSchema = z.object({
   bio: z.string().trim().max(200).optional(),
 });
 
-export const updateUserSchema = z.object({
-  username: z.string().trim().min(3).max(30).optional(),
-  email: z.email().trim().toLowerCase().optional(),
-  firstName: z.string().trim().min(2).max(100).optional(),
-  lastName: z.string().trim().min(2).max(100).optional(),
-  profileImage: z.url().startsWith("https://").optional(),
-  bio: z.string().trim().max(200).optional(),
-});
+export const updateUserSchema = z
+  .object({
+    username: z.string().trim().min(3).max(30).optional(),
+    email: z.email().trim().toLowerCase().optional(),
+    firstName: z.string().trim().min(2).max(100).optional(),
+    lastName: z.string().trim().min(2).max(100).optional(),
+    profileImage: z.url().startsWith("https://").optional(),
+    bio: z.string().trim().max(200).optional(),
+  })
+  .strict()
+  .refine((data) => Object.keys(data).length > 0, {
+    message: "At least one field must be provided for update",
+  });
 
 export const updatePasswordSchema = z.object({
   currentPassword: z.string().min(8).max(100),

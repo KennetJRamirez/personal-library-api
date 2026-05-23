@@ -1,5 +1,6 @@
 import { prisma } from "../config/db.js";
 import { UserResponseDto, UserListDto } from "../dto/userDTO.js";
+import { hashPassword } from "../utils/password.js";
 
 class UserService {
   async createUser(data) {
@@ -19,9 +20,12 @@ class UserService {
       throw new Error("Could not create user");
     }
 
+    // Hash the password
+    const hashedPassword = await hashPassword(data.password);
+
     // Create the user
     const user = await prisma.user.create({
-      data: { ...data, roleId: role.id },
+      data: { ...data, roleId: role.id, password: hashedPassword },
     });
 
     return UserResponseDto(user);

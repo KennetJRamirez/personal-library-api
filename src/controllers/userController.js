@@ -36,7 +36,7 @@ class UserController {
 
   async getUserById(req, res) {
     try {
-      const { id } = req.params;
+      const id = req.user.id;
       const user = await UserService.getUserById(id);
 
       return res.status(200).json({
@@ -54,7 +54,7 @@ class UserController {
 
   async updateUser(req, res) {
     try {
-      const { id } = req.params;
+      const id = req.user.id;
 
       const user = await UserService.updateUser(id, req.body);
 
